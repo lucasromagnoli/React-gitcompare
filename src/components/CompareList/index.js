@@ -5,7 +5,7 @@ import { Container, Repository } from './style';
 const CompareList = ({ repositories }) => (
   <Container>
     {repositories.map(repository => (
-      <Repository>
+      <Repository key={repository.id}>
         <header>
           <img src={repository.owner.avatar_url} alt={`${repository.owner.login} logo`} />
           <strong>{repository.name}</strong>
@@ -14,16 +14,24 @@ const CompareList = ({ repositories }) => (
 
         <ul>
           <li>
+            <i className="fa fa-star" />
             {repository.stargazers_count} <small>stars</small>
           </li>
           <li>
+            <i className="fas fa-code-branch" />
             {repository.forks_count} <small>forks</small>
           </li>
           <li>
+            <i className="fa exclamation-triangle" />
             {repository.open_issues_count} <small>issues</small>
           </li>
           <li>
-            {repository.pushed_at} <small>last commit</small>
+            <i className="fas fa-exclamation-circle" />
+            {repository.lastCommit} <small>last commit</small>
+          </li>
+          <li>
+            <i className="far fa-arrow-alt-circle-down" />
+            {repository.lastUpdate} <small>last update in GitCompare</small>
           </li>
         </ul>
       </Repository>
