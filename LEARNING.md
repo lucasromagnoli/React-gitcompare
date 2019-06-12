@@ -1,10 +1,12 @@
 # Commandos utilizados
 
 **_ Criando o projeto _**
-create-react-app nome-do-projeto
+
+> create-react-app nome-do-projeto
 
 **_ Instalando as dependências _**
-yarn add eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react
+
+> yarn add eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react
 
 **_ Configurando o EditorConfig _**
 Criar o arquivo .editorconfig
@@ -15,7 +17,7 @@ root = true
 
 [*]
 indent_style = space
-indent_size = 4
+indent_size = 2
 charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
@@ -50,7 +52,3 @@ Configurar da seguinte maneira:
   }
 }
 ```
-
-# Tecnologias utilizadas
-
-> CSSINJS (styled-components)
