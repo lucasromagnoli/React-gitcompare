@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import { Container, Repository } from './style';
 
-const CompareList = ({ repositories }) => (
+const CompareList = ({ repositories, removeRepository, updateRepository }) => (
   <Container>
     {repositories.map(repository => (
       <Repository key={repository.id}>
@@ -18,22 +19,30 @@ const CompareList = ({ repositories }) => (
             {repository.stargazers_count} <small>stars</small>
           </li>
           <li>
-            <i className="fas fa-code-branch" />
+            <i className="fa fa-code-fork" />
             {repository.forks_count} <small>forks</small>
           </li>
           <li>
-            <i className="fa exclamation-triangle" />
+            <i className="fa fa-exclamation-circle" />
             {repository.open_issues_count} <small>issues</small>
           </li>
           <li>
-            <i className="fas fa-exclamation-circle" />
+            <i className="fa fa-clock-o" />
             {repository.lastCommit} <small>last commit</small>
           </li>
           <li>
-            <i className="far fa-arrow-alt-circle-down" />
-            {repository.lastUpdate} <small>last update in GitCompare</small>
+            <i className="fa fa-refresh" />
+            {moment(repository.lastUpdate).fromNow()} <small>last update in GitCompare</small>
           </li>
         </ul>
+        <div className="buttons-container">
+          <button type="button" onClick={() => updateRepository(repository.id)}>
+            <i className="fa fa-refresh" />
+          </button>
+          <button type="button" onClick={() => removeRepository(repository.id)}>
+            <i className="fa fa-trash" />
+          </button>
+        </div>
       </Repository>
     ))}
   </Container>
@@ -54,6 +63,8 @@ CompareList.propTypes = {
       pushed_at: PropTypes.string,
     }),
   ).isRequired,
+  updateRepository: PropTypes.func.isRequired,
+  removeRepository: PropTypes.func.isRequired,
 };
 
 export default CompareList;

@@ -13,6 +13,42 @@ export default class Home extends Component {
     repositories: [],
   };
 
+  async componentDidMount() {
+    this.setState({ loading: true });
+
+    this.setState({ repositories: await this.getLocalRepositories(), loading: false });
+  }
+
+  getLocalRepositories = async () => JSON.parse(await localStorage.getItem('@GitCompare:repositories')) || [];
+
+  handleRemoveRepository = async (id) => {
+    const repositoriesFiltred = this.state.repositories.filter(repo => repo.id !== id);
+    this.setState({ repositories: repositoriesFiltred });
+
+    await localStorage.setItem('@GitCompare:repositories', JSON.stringify(repositoriesFiltred));
+  };
+
+  handleUpdateRepository = async (id) => {
+    const { repositories } = this.state;
+
+    const repository = repositories.find(repo => repo.id === id);
+    try {
+      repository.lastCommit = moment(repository.pushed_at).fromNow();
+      repository.lastUpdate = Date.now();
+
+      this.setState({
+        repositoryError: false,
+        repositories: repositories.map(repo => (repo.id === repository.id ? repository : repo)),
+      });
+
+      await localStorage.setItem('@GitCompare:repositories', JSON.stringify(repositories));
+    } catch (error) {
+      this.setState({ repositoryError: true });
+    } finally {
+      this.setState({ loading: false });
+    }
+  };
+
   handleAddRepository = async (e) => {
     e.preventDefault();
 
@@ -20,10 +56,22 @@ export default class Home extends Component {
     try {
       const { data: repository } = await api.get(`/repos/${this.state.repositoryInput}`);
 
+      const { repositories } = this.state;
+      const alreadyPushed = repositories.map(repo => repo.id).indexOf(repository.id);
+      if (alreadyPushed > -1) {
+        this.setState({ repositoryError: true });
+        return;
+      }
       repository.lastCommit = moment(repository.pushed_at).fromNow();
-      repository.lastUpdate = moment().fromNow();
+      repository.lastUpdate = Date.now();
+
+      await localStorage.setItem(
+        '@GitCompare:repositories',
+        JSON.stringify([...this.state.repositories, repository]),
+      );
 
       this.setState({
+        repositoryInput: '',
         repositoryError: false,
         repositories: [...this.state.repositories, repository],
       });
@@ -33,8 +81,6 @@ export default class Home extends Component {
       this.setState({ loading: false });
     }
   };
-
-  handleRemoveRepository = async () => {};
 
   render() {
     return (
@@ -52,7 +98,11 @@ export default class Home extends Component {
           </button>
         </Form>
 
-        <CompareList repositories={this.state.repositories} />
+        <CompareList
+          repositories={this.state.repositories}
+          removeRepository={this.handleRemoveRepository}
+          updateRepository={this.handleUpdateRepository}
+        />
       </Container>
     );
   }

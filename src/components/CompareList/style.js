@@ -57,4 +57,33 @@ export const Repository = styled.div`
       }
     }
   }
+
+  div.buttons-container {
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-around;
+    button {
+      padding: 5px 10px;
+      font-size: 35px;
+      font-weight: bold;
+      border: 0;
+      i {
+        margin-right: 3px;
+      }
+      &:nth-child(2n) {
+        color: #c11927;
+        &:hover {
+          background: #aa1622;
+          color: #fff;
+        }
+      }
+      &:nth-child(2n - 1) {
+        color: #116088;
+        &:hover {
+          background: #0e5071;
+          color: #fff;
+        }
+      }
+    }
+  }
 `;
